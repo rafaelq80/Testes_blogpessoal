@@ -7,8 +7,8 @@ Nesta atividade iremos implementar os testes nas Camadas Model, Repository e Con
 ## Boas Práticas
 
 1. <a href="#dep">Configure as Dependências no arquivo pom.xml</a>
-2. <a href="#dtb">Configure o Banco de Dados de testes</a>
-3. <a href="#pac">Prepare a estrutura de packages para testes</a>
+2. <a href="#dtb">Configure o Banco de Dados (db_blogpessoaltest)</a>
+3. <a href="#pac">Prepare a estrutura de pacotes para os testes</a>
 4. <a href="#mod">Crie a Classe de testes na Camada Model: UsuarioTest</a>
 5. <a href="#rep">Crie a Classe de testes na Camada Repository: UsuarioRepositoryTest</a>
 6. <a href="#ctr">Crie a Classe de testes na Camada Controller: UsuarioControllerTest</a>
@@ -46,7 +46,7 @@ Para:
 
 
 
-<h2 id="dtb">Banco de Dados de teste</h2>
+<h2 id="dtb">Banco de Dados</h2>
 
 1)  Crie a **Source Folder resources** em **src/test**
 
@@ -69,7 +69,8 @@ Na **linha 4**, configure a senha do usuário root criada na instalação do MyS
 
 
 
-<div id="pac">## Estrutura de Testes
+<h2 id="pac">Estrutura de pacotes</h2>
+
 
 Na Source Folder de Testes (**src/test/java**) , observe que existe uma estrutura de pacotes idêntica a Source Folder Main (**src/main/java**). Crie na Source Folder de Testes as packages Model, Repository e Controller. 
 
@@ -153,6 +154,8 @@ public class UsuarioTest {
 
 }
 ```
+
+💥 Para inserir os emojis na annotation @DisplayName, utilize as teclas de atalho **Windows + Ponto**
 
 
 

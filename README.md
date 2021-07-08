@@ -127,7 +127,7 @@ public class UsuarioTest {
     public void start() throws ParseException {
 
         LocalDate data = LocalDate.parse("2000-07-22", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        usuario = new Usuario(0L, "João da Silva", "joao@email.com.br", "13465278", true, data);
+        usuario = new Usuario(0L, "João da Silva", "joao@email.com.br", "13465278", data);
 
     }
 
@@ -196,22 +196,22 @@ public class UsuarioRepositoryTest {
     void start() throws ParseException {
 
         LocalDate data = LocalDate.parse("2000-07-22", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        Usuario usuario = new Usuario(0, "João Silva", "joao@email.com.br", "13465278", true, data);
+        Usuario usuario = new Usuario(0, "João Silva", "joao@email.com.br", "13465278", data);
         
         if(usuarioRepository.findByLogin(usuario.getLogin()) != null)
 			usuarioRepository.save(usuario);
         
-        usuario = new Usuario(0, "Manuel da Silva", "manuel@email.com.br", "13465278", true, data);
+        usuario = new Usuario(0, "Manuel da Silva", "manuel@email.com.br", "13465278", data);
 
         if(usuarioRepository.findByLogin(usuario.getLogin()) != null)
             usuarioRepository.save(usuario);
 
-        usuario = new Usuario(0, "Fred da Silva", "frederico@email.com.br", "13465278", true, data);
+        usuario = new Usuario(0, "Fred da Silva", "frederico@email.com.br", "13465278", data);
 
         if(usuarioRepository.findByLogin(usuario.getLogin()) != null)
             usuarioRepository.save(usuario);
 
-       	usuario = new Usuario(0, "Paulo Antunes", "paulo@email.com.br", "13465278", true, data);
+       	usuario = new Usuario(0, "Paulo Antunes", "paulo@email.com.br", "13465278", data);
 
         if(usuarioRepository.findByLogin(usuario.getLogin()) != null)
             usuarioRepository.save(usuario);
@@ -283,10 +283,26 @@ public class UsuarioControllerTest {
     public void start() throws ParseException {
 
         LocalDate dataPost = LocalDate.parse("2000-07-22", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-       usuario = new Usuario(0L, "João da Silva", "joao@email.com.br", "13465278", true, dataPost);
+        
+        /**
+	    * Esta linha gera o usuário admin. Descomente esta linha, 
+	    * comente a próxima linha e rode o teste Cadastrar Usuário 
+	    * sozinho para criar o usuário admin@email.com.br no Banco 
+	    * de Dados. 
+	    *
+	    * Em seguida faça o processo inverso.
+        * 
+        * Este usuário será utilizado para logar
+        * na API nos demais testes nos endpoints protegidos na API
+        * 
+        */
+        
+       //usuario = new Usuario(0L, "Administrador", "admin@email.com.br", "admin123", dataPost);
+       
+       usuario = new Usuario(0L, "João da Silva", "joao@email.com.br", "13465278", dataPost);
 
         LocalDate dataPut = LocalDate.parse("2000-07-22", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        usuarioUpdate = new Usuario(1L, "João da Silva Souza", "joao@email.com.br", "joao123", false, dataPut);
+        usuarioUpdate = new Usuario(1L, "João da Silva Souza", "joao@email.com.br", "joao123", dataPut);
   
     }
 

@@ -57,7 +57,7 @@ Agora vamos configurar um Banco de dados de testes para não usar o Banco de dad
 
 2) Em **Source Folder**, no item **Folder name**, informe o caminho como mostra a figura abaixo (**src/test/resources**), e clique em **Finish**:
 
-<div align="center"><a href="https://imgur.com/1GrfXk5"><img src="https://i.imgur.com/1GrfXk5.png" title="source: imgur.com"/></a>
+<div align="center"><img src="https://i.imgur.com/1GrfXk5.png" title="source: imgur.com"/></div>
 
 3) Na nova Source Folder (**src/test/resources**) , crie o arquivo **application.properties**, para configurarmos a conexão com o Banco de Dados de testes
 
@@ -89,9 +89,9 @@ spring.jackson.time-zone=Brazil/East
 
 server.error.include-stacktrace=NEVER
 ```
-Observe que na **linha 2**, o nome do Banco de dados possui a palavra **test** para indicar que será apenas para a execução dos testes.
+Observe que o nome do Banco de dados possui a palavra **teste** para indicar que este banco será utilizado apenas para a execução dos testes.
 
-Na **linha 4**, configure a senha do usuário root criada na instalação do MySQL na sua máquina local
+Não esqueça de configurar a senha do usuário root.
 
 <h2 id="pac">Estrutura de pacotes</h2>
 
@@ -395,6 +395,8 @@ public class UsuarioRepositoryTest {
 <h2 id="ctr">Classe UsuarioControllerTest</h2>
 
 Crie a classe UsuarioControllerTest na package **controller**, na Source Folder de Testes (**src/test/java**) 
+
+**Importante:** Para executar todos os testes da Classe UsuarioControllerTest de uma única vez, faça o Drop do Banco de Dados de testes antes. Caso contrário será necessário verificar o id do usuário no banco de dados via MySQL Workbench para testar o método Put.
 
 ```java
 package br.org.generation.blogpessoal.controller;

@@ -89,9 +89,9 @@ spring.jackson.time-zone=Brazil/East
 
 server.error.include-stacktrace=NEVER
 ```
-Observe que na **linha 2**, o nome do Banco de dados possui a palavra **test** para indicar que será apenas para a execução dos testes.
+Observe que o nome do Banco de dados possui a palavra **teste** para indicar que será apenas para a execução dos testes.
 
-Na **linha 4**, configure a senha do usuário root criada na instalação do MySQL na sua máquina local
+Não esqueça de configurar a senha do usuário root .
 
 <h2 id="pac">Estrutura de pacotes</h2>
 

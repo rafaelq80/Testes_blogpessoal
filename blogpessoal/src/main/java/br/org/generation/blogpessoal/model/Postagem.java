@@ -42,6 +42,10 @@ public class Postagem {
 	@JsonIgnoreProperties("postagem")
 	private Tema tema;
 		
+	@ManyToOne
+	@JsonIgnoreProperties ("postagem")
+	private Usuario usuario;
+	
 	public long getId() {
 		return id;
 	}
@@ -74,6 +78,14 @@ public class Postagem {
 		this.data = data;
 	}
 
+	public int getCurtidas() {
+		return curtidas;
+	}
+
+	public void setCurtidas(int curtidas) {
+		this.curtidas = curtidas;
+	}
+	
 	public Tema getTema() {
 		return tema;
 	}
@@ -82,13 +94,12 @@ public class Postagem {
 		this.tema = tema;
 	}
 
-	public int getCurtidas() {
-		return curtidas;
+	public Usuario getUsuario() {
+		return usuario;
 	}
 
-	public void setCurtidas(int curtidas) {
-		this.curtidas = curtidas;
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
-
 	
 }

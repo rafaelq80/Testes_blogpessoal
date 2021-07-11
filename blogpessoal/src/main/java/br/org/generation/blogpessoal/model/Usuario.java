@@ -1,18 +1,22 @@
 package br.org.generation.blogpessoal.model;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
 @Entity
@@ -29,7 +33,7 @@ public class Usuario {
 	
 	@NotNull
 	@Email
-	private String login;
+	private String usuario;
 	
 	@NotNull
 	@Size(min = 8)
@@ -39,17 +43,27 @@ public class Usuario {
 	@JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate dataNascimento; // Atributo adicional
 	
-	public Usuario() {
-		
-	}
+	@OneToMany (mappedBy = "usuario", cascade = CascadeType.REMOVE)
+	@JsonIgnoreProperties("usuario")
+	private List <Postagem> postagem;
 
-	public Usuario(long id, String nome, String login, String senha, LocalDate datanascimento) {
+	/** 
+	 * Para efetuar os testes, precisamos criar dois métodos construtores
+	 * 
+	 * 1) Método construtor com todos os atributos, exceto o atributo postagem
+	 * 
+	 * 2) Método construtor vazio sem nenhum atributo
+	*/
+
+	public Usuario(long id, String nome, String usuario, String senha, LocalDate datanascimento) {
 		this.id = id;
 		this.nome = nome;
-		this.login = login;
+		this.usuario = usuario;
 		this.senha = senha;
 		this.dataNascimento = datanascimento;
 	}
+
+	public Usuario() {	}
 
 	public long getId() {
 		return id;
@@ -67,12 +81,12 @@ public class Usuario {
 		this.nome = nome;
 	}
 
-	public String getLogin() {
-		return login;
+	public String getUsuario() {
+		return usuario;
 	}
 
-	public void setLogin(String login) {
-		this.login = login;
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
 	}
 
 	public String getSenha() {
@@ -89,6 +103,15 @@ public class Usuario {
 
 	public void setDatanascimento(LocalDate datanascimento) {
 		this.dataNascimento = datanascimento;
+	}
+
+	public List<Postagem> getPostagem() {
+		return postagem;
+	}
+
+
+	public void setPostagem(List<Postagem> postagem) {
+		this.postagem = postagem;
 	}
 
 }

@@ -2,18 +2,19 @@
 
 Nesta atividade iremos implementar os testes nas Camadas Model, Repository e Controller da Classe Usuário. 
 
-Utilize o e-book sobre SpringTesting (<a href="https://github.com/conteudoGeneration/Spring-com-J-unit/blob/main/ebook/Spring_Testing_v2.pdf" target="_blank">Clique aqui</a>) e as instruções descritas abaixo como referências para implementar  os testes nas 3 Camadas da Classe Usuario.
+Utilize o e-book sobre SpringTesting (<a href="https://github.com/rafaelq80/tdd_blogpessoal/blob/main/ebook/spring_testing.pdf" target="_blank">Clique aqui</a>) e as instruções descritas abaixo como referências para implementar  os testes nas 3 Camadas da Classe Usuario.
 
 ## Boas Práticas
 
 1. <a href="#dep">Configure as Dependências no arquivo pom.xml</a>
 2. <a href="#dtb">Configure o Banco de Dados (db_blogpessoaltest)</a>
 3. <a href="#pac">Prepare a estrutura de pacotes para os testes</a>
-4. <a href="#mod">Crie a Classe de testes na Camada Model: UsuarioTest</a>
-5. <a href="#rep">Crie a Classe de testes na Camada Repository: UsuarioRepositoryTest</a>
-6. <a href="#ctr">Crie a Classe de testes na Camada Controller: UsuarioControllerTest</a>
-7. <a href="#run">Execute os testes</a>
-8. <a href="#ref">Referências</a>
+4. <a href="#mcon">Crie os métodos construtores na Classe Usuario</a>
+5. <a href="#mod">Crie a Classe de testes na Camada Model: UsuarioTest</a>
+6. <a href="#rep">Crie a Classe de testes na Camada Repository: UsuarioRepositoryTest</a>
+7. <a href="#ctr">Crie a Classe de testes na Camada Controller: UsuarioControllerTest</a>
+8. <a href="#run">Execute os testes</a>
+9. <a href="#ref">Referências</a>
 
 
 
@@ -48,29 +49,51 @@ Para:
 
 <h2 id="dtb">Banco de Dados</h2>
 
-1)  Crie a **Source Folder resources** em **src/test**
+Agora vamos configurar um Banco de dados de testes para não usar o Banco de dados principal.
 
-2) Na **Source Folder resources**, crie o arquivo **application.properties**, para configurarmos a conexão com o Banco de Dados de testes
+1) No lado esquerdo superior, na Guia **Project**, na Package **src/test**, clique com o botão direito do mouse e clique na opção **New->Source folder**
+
+<div align="center"><img  src="https://i.imgur.com/0afI6KK.png" title="source: imgur.com" /></div>
+
+2) Em **Source Folder**, no item **Folder name**, informe o caminho como mostra a figura abaixo (**src/test/resources**), e clique em **Finish**:
+
+<div align="center"><a href="https://imgur.com/1GrfXk5"><img src="https://i.imgur.com/1GrfXk5.png" title="source: imgur.com"/></a>
+
+3) Na nova Source Folder (**src/test/resources**) , crie o arquivo **application.properties**, para configurarmos a conexão com o Banco de Dados de testes
+
+4) No lado esquerdo superior, na Guia **Project**, na Package **src/test/resources**, clique com o botão direito do mouse e clique na opção **New->File**.
+
+5) Em File name, digite o nome do arquivo (**application.properties**) e clique em **Finish**. 
+
+<div align="center"><a href="https://imgur.com/4rp3XFT"><img src="https://i.imgur.com/4rp3XFT.png" title="source: imgur.com" /></a></div>
+
+6) Veja o arquivo criado na  **Package Explorer** 
 
 <div align="center"><img src="https://i.imgur.com/phqRE9r.png" title="source: imgur.com" /></div>
 
-3) Insira neste arquivo as seguintes linhas:
+7) Insira no arquivo application.properties as seguinte linhas:
 
 ```properties
 spring.jpa.hibernate.ddl-auto=update
-spring.datasource.url=jdbc:mysql://localhost/db_blogpessoaltest? createDatabaseIfNotExist=true&serverTimezone=UTC&useSSl=false
+spring.jpa.database=mysql
+spring.datasource.url=jdbc:mysql://localhost/db_testeblogpessoal?createDatabaseIfNotExist=true&serverTimezone=America/Sao_Paulo&useSSl=false
 spring.datasource.username=root
 spring.datasource.password=root
+
 spring.jpa.show-sql=true
+
+spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.MySQL8Dialect
+
+spring.jackson.date-format=yyyy-MM-dd HH:mm:ss
+spring.jackson.time-zone=Brazil/East
+
+server.error.include-stacktrace=NEVER
 ```
 Observe que na **linha 2**, o nome do Banco de dados possui a palavra **test** para indicar que será apenas para a execução dos testes.
 
 Na **linha 4**, configure a senha do usuário root criada na instalação do MySQL na sua máquina local
 
-
-
 <h2 id="pac">Estrutura de pacotes</h2>
-
 
 Na Source Folder de Testes (**src/test/java**) , observe que existe uma estrutura de pacotes idêntica a Source Folder Main (**src/main/java**). Crie na Source Folder de Testes as packages Model, Repository e Controller. 
 
@@ -85,9 +108,134 @@ O Processo de criação dos arquivos é o mesmo do código principal, exceto o n
 
 
 
+<h2 id="mcon">Métodos Construtores na Classe Usuario</h2>
+
+
+
+Na Classe Usuario, na canada Model, vamos criar 2 métodos construtores: o primeiro com todos os atributos, exceto o postagens e um segundo método vazio, ou seja, sem atributos.
+
+```java
+package br.org.generation.blogpessoal.model;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@Entity
+@Table(name = "tb_usuarios")
+public class Usuario {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
+	
+	@NotNull
+	@Size(min = 5, max = 100)
+	private String nome;
+	
+	@NotNull
+	@Email
+	private String usuario;
+	
+	@NotNull
+	@Size(min = 8)
+	private String senha;
+	
+	@Column(name = "dt_nascimento")
+	@JsonFormat(pattern="yyyy-MM-dd")
+    private LocalDate dataNascimento; // Atributo adicional
+	
+	@OneToMany (mappedBy = "usuario", cascade = CascadeType.REMOVE)
+	@JsonIgnoreProperties("usuario")
+	private List <Postagem> postagem;
+
+// Primeiro método Construtor
+
+	public Usuario(long id, String nome, String usuario, String senha, LocalDate datanascimento) {
+		this.id = id;
+		this.nome = nome;
+		this.usuario = usuario;
+		this.senha = senha;
+		this.dataNascimento = datanascimento;
+	}
+
+// Segundo método Construtor
+
+	public Usuario() {	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
+	}
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+
+	public LocalDate getDatanascimento() {
+		return dataNascimento;
+	}
+
+	public void setDatanascimento(LocalDate datanascimento) {
+		this.dataNascimento = datanascimento;
+	}
+
+	public List<Postagem> getPostagem() {
+		return postagem;
+	}
+
+
+	public void setPostagem(List<Postagem> postagem) {
+		this.postagem = postagem;
+	}
+
+}
+
+```
+
+
 <h2 id="mod">Classe UsuarioTest</h2>
 
 Crie a classe UsuarioTest na package **model**, na Source Folder de Testes (**src/test/java**) 
+
+**Importante:** O Teste da Classe Usuario da camada Model, não utiliza o Banco de Dados.
 
 ```java
 package br.org.generation.blogpessoal.model;
@@ -95,7 +243,6 @@ package br.org.generation.blogpessoal.model;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
@@ -114,44 +261,47 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class UsuarioTest {
-
+    
     public Usuario usuario;
     public Usuario usuarioErro = new Usuario();
 
-    @Autowired
-    private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+	@Autowired
+	private  ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+	
+	Validator validator = factory.getValidator();
 
-    Validator validator = factory.getValidator();
+	@BeforeEach
+	public void start() {
 
-    @BeforeEach
-    public void start() throws ParseException {
+		LocalDate data = LocalDate.parse("2000-07-22", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		usuario = new Usuario(0L, "João da Silva", "joao@email.com.br", "13465278", data);
 
-        LocalDate data = LocalDate.parse("2000-07-22", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        usuario = new Usuario(0L, "João da Silva", "joao@email.com.br", "13465278", data);
+	}
 
-    }
+	@Test
+	@DisplayName("✔ Valida Atributos Não Nulos")
+	void testValidaAtributos() {
 
-    @Test
-    @DisplayName("✔ Valida Atributos Não Nulos")
-    void testValidaAtributos() {
+		Set<ConstraintViolation<Usuario>> violacao = validator.validate(usuario);
+		
+		System.out.println(violacao.toString());
 
-        Set<ConstraintViolation<Usuario>> violacao = validator.validate(usuario);
-        System.out.println(violacao.toString());
-        assertTrue(violacao.isEmpty());
+		assertTrue(violacao.isEmpty());
+	}
 
-    }
+	@Test
+	@DisplayName("❌ Valida Atributos Nulos")
+	void testValidaAtributosNulos() {
+		
+		usuarioErro.setUsuario("paulo@email.com.br");
 
-    @Test
-    @DisplayName("❌ Valida Atributos Nulos")
-    void testValidaAtributosNulos() {
-        
-        usuarioErro.setLogin("paulo@email.com.br");
-        Set<ConstraintViolation<Usuario>> violacao = validator.validate(usuarioErro);
-        System.out.println(violacao.toString());
-        assertFalse(violacao.isEmpty());
-   
-    }
+		Set<ConstraintViolation<Usuario>> violacao = validator.validate(usuarioErro);
+		
+		System.out.println(violacao.toString());
 
+		assertFalse(violacao.isEmpty());
+		
+	}
 }
 ```
 
@@ -161,7 +311,9 @@ public class UsuarioTest {
 
 <h2 id="rep">Classe UsuarioRepositoryTest</h2>
 
-Crie a classe UsuarioRepositoryTest na package **repository**, na Source Folder de Testes (**src/test/java**) 
+Crie a classe UsuarioRepositoryTest na package **repository**, na Source Folder de Testes (**src/test/java**)
+
+**Importante:** O Teste da Classe UsuarioRepository da camada Repository, utiliza o Banco de Dados, entretanto ele não criptografa a senha ao gravar um novo usuario no Banco de dados. O teste não utiliza a Classe de Serviço UsuarioService para gravar o usuário. O Teste utiliza o método save(), da Classe JpaRepository de forma direta. 
 
 ```java
 package br.org.generation.blogpessoal.repository;
@@ -188,56 +340,56 @@ import br.org.generation.blogpessoal.model.Usuario;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UsuarioRepositoryTest {
-
+    
     @Autowired
-    private UsuarioRepository usuarioRepository;
-
-    @BeforeAll
-    void start() throws ParseException {
-
-        LocalDate data = LocalDate.parse("2000-07-22", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        Usuario usuario = new Usuario(0, "João Silva", "joao@email.com.br", "13465278", data);
-        
-        if(usuarioRepository.findByLogin(usuario.getLogin()) != null)
+	private UsuarioRepository usuarioRepository;
+	
+	@BeforeAll
+	void start() throws ParseException {
+	   
+		LocalDate data = LocalDate.parse("2000-07-22", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		
+		Usuario usuario = new Usuario(0, "João da Silva", "joao@email.com.br", "13465278", data);
+		if(!usuarioRepository.findByUsuario(usuario.getUsuario()).isPresent())
 			usuarioRepository.save(usuario);
-        
-        usuario = new Usuario(0, "Manuel da Silva", "manuel@email.com.br", "13465278", data);
+		
+		usuario = new Usuario(0, "Manuel da Silva", "manuel@email.com.br", "13465278", data);
+		if(!usuarioRepository.findByUsuario(usuario.getUsuario()).isPresent())
+			usuarioRepository.save(usuario);
+		
+		usuario = new Usuario(0, "Frederico da Silva", "frederico@email.com.br", "13465278", data);
+		if(!usuarioRepository.findByUsuario(usuario.getUsuario()).isPresent())
+			usuarioRepository.save(usuario);
 
-        if(usuarioRepository.findByLogin(usuario.getLogin()) != null)
+        usuario = new Usuario(0, "Paulo Antunes", "paulo@email.com.br", "13465278", data);
+        if(!usuarioRepository.findByUsuario(usuario.getUsuario()).isPresent())
             usuarioRepository.save(usuario);
+	}
+	
+	@Test
+	@DisplayName("💾 Retorna o nome")
+	public void findByNomeRetornaNome() throws Exception {
 
-        usuario = new Usuario(0, "Fred da Silva", "frederico@email.com.br", "13465278", data);
+		Usuario usuario = usuarioRepository.findByNome("João da Silva");
+		assertTrue(usuario.getNome().equals("João da Silva"));
+	}
+	
+	@Test
+	@DisplayName("💾 Retorna 3 usuarios")
+	public void findAllByNomeContainingIgnoreCaseRetornaTresUsuarios() {
 
-        if(usuarioRepository.findByLogin(usuario.getLogin()) != null)
-            usuarioRepository.save(usuario);
+		List<Usuario> listaDeUsuarios = usuarioRepository.findAllByNomeContainingIgnoreCase("Silva");
+		assertEquals(3, listaDeUsuarios.size());
+	}
 
-       	usuario = new Usuario(0, "Paulo Antunes", "paulo@email.com.br", "13465278", data);
-
-        if(usuarioRepository.findByLogin(usuario.getLogin()) != null)
-            usuarioRepository.save(usuario);
-  }
-
-    @Test
-    @DisplayName("💾 Retorna o nome")
-    public void findFirstByNomeRetornaNome() throws Exception {
-        Usuario usuario = usuarioRepository.findByNome("João da Silva");
-        assertTrue(usuario.getNome().equals("João da Silva"));
-  }
-
-    @Test
-    @DisplayName("💾 Retorna 3 usuarios")
-    public void findAllByNomeContainingIgnoreCaseRetornaTresUsuarios() {
-        List<Usuario> listaDeUsuarios = usuarioRepository.findAllByNomeContainingIgnoreCase("Silva");
-        assertEquals(3, listaDeUsuarios.size());
-  }
-
-    @AfterAll
-    public void end() {
-        usuarioRepository.deleteAll();
-    }
+	@AfterAll
+	public void end() {
+		
+		usuarioRepository.deleteAll();
+		
+	}
 }
 ```
-
 
 
 <h2 id="ctr">Classe UsuarioControllerTest</h2>
@@ -254,10 +406,13 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestMethodOrder;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -268,73 +423,79 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import br.org.generation.blogpessoal.model.Usuario;
+import br.org.generation.blogpessoal.repository.UsuarioRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class UsuarioControllerTest {
-  
-    @Autowired
-    private TestRestTemplate testRestTemplate;
-
-    private Usuario usuario;
-    private Usuario usuarioUpdate;
-
-    @BeforeAll
-    public void start() throws ParseException {
-
-        LocalDate dataPost = LocalDate.parse("2000-07-22", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        
-        /**
-	    * Esta linha gera o usuário admin. Descomente esta linha, 
-	    * comente a próxima linha e rode o teste Cadastrar Usuário 
-	    * sozinho para criar o usuário admin@email.com.br no Banco 
-	    * de Dados. 
-	    *
-	    * Em seguida faça o processo inverso.
-        * 
-        * Este usuário será utilizado para logar
-        * na API nos demais testes nos endpoints protegidos na API
-        * 
-        */
-        
-       //usuario = new Usuario(0L, "Administrador", "admin@email.com.br", "admin123", dataPost);
-       
-       usuario = new Usuario(0L, "João da Silva", "joao@email.com.br", "13465278", dataPost);
-
-        LocalDate dataPut = LocalDate.parse("2000-07-22", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        usuarioUpdate = new Usuario(1L, "João da Silva Souza", "joao@email.com.br", "joao123", dataPut);
-  
-    }
-
-    @Disabled
-    @Test
-    @DisplayName("✔ Cadastrar Usuário!")
-    public void deveRealizarPostUsuario() {
-
-        HttpEntity<Usuario> request = new HttpEntity<Usuario>(usuario);
-        ResponseEntity<Usuario> resposta = testRestTemplate.exchange("/usuarios/cadastrar", HttpMethod.POST, request, Usuario.class);
-        assertEquals(HttpStatus.CREATED, resposta.getStatusCode());
     
-    }
-  
-    @Test
-    @DisplayName("👍 Listar todos os Usuários!")
-    public void deveMostrarTodosUsuarios() {
-        ResponseEntity<String> resposta = testRestTemplate.withBasicAuth("admin@email.com.br", "admin123").exchange("/usuarios/all", HttpMethod.GET, null, String.class);
-        assertEquals(HttpStatus.OK, resposta.getStatusCode());
+	@Autowired
+	private TestRestTemplate testRestTemplate;
+	
+	private Usuario usuario;
+	private Usuario usuarioUpdate;
+	private Usuario usuarioAdmin;
 
-  }
+	@Autowired
+	private UsuarioRepository usuarioRepository;
+	
+	@BeforeAll
+	public void start() throws ParseException {
 
-    @Test
-    @DisplayName("😳 Alterar Usuário!")
-    public void deveRealizarPutUsuario() {
+		LocalDate dataAdmin = LocalDate.parse("1990-07-22", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        usuarioAdmin = new Usuario(0L, "Administrador", "admin@email.com.br", "admin123", dataAdmin);
+
+		if(!usuarioRepository.findByUsuario(usuarioAdmin.getUsuario()).isPresent()) {
+
+            HttpEntity<Usuario> request = new HttpEntity<Usuario>(usuarioAdmin);
+			testRestTemplate.exchange("/usuarios/cadastrar", HttpMethod.POST, request, Usuario.class);
+			
+		}
+		
+		LocalDate dataPost = LocalDate.parse("2000-07-22", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        usuario = new Usuario(0L, "João da Silva dos Santos", "joao@email.com.br", "13465278", dataPost);
         
-        HttpEntity<Usuario> request = new HttpEntity<Usuario>(usuarioUpdate);
-        ResponseEntity<Usuario> resposta = testRestTemplate.withBasicAuth("admin@email.com.br", "admin123").exchange("/usuarios/alterar", HttpMethod.PUT, request, Usuario.class);
-        assertEquals(HttpStatus.OK, resposta.getStatusCode());
+		LocalDate dataPut = LocalDate.parse("2000-07-22", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        usuarioUpdate = new Usuario(2L, "João da Silva dos Santos Souza", "joao@email.com.br", "joao123", dataPut);
+	}
 
-  }
+	@Test
+	@Order(1)
+    @DisplayName("✔ Cadastrar Usuário!")
+	public void deveRealizarPostUsuario() {
 
+		HttpEntity<Usuario> request = new HttpEntity<Usuario>(usuario);
+
+		ResponseEntity<Usuario> resposta = testRestTemplate.exchange("/usuarios/cadastrar", HttpMethod.POST, request, Usuario.class);
+		
+		assertEquals(HttpStatus.CREATED, resposta.getStatusCode());
+
+	}
+
+	@Test
+	@Order(2)
+    @DisplayName("👍 Listar todos os Usuários!")
+	public void deveMostrarTodosUsuarios() {
+		
+		ResponseEntity<String> resposta = testRestTemplate.withBasicAuth("admin@email.com.br", "admin123").exchange("/usuarios/all", HttpMethod.GET, null, String.class);
+		
+		assertEquals(HttpStatus.OK, resposta.getStatusCode());
+	}
+	
+	@Test
+    @Order(3)
+	@DisplayName("😳 Alterar Usuário!")
+	public void deveRealizarPutUsuario() {
+
+		HttpEntity<Usuario> request = new HttpEntity<Usuario>(usuarioUpdate);
+
+		ResponseEntity<Usuario> resposta = testRestTemplate.withBasicAuth("admin@email.com.br", "admin123").exchange("/usuarios/alterar", HttpMethod.PUT, request, Usuario.class);
+		
+		assertEquals(HttpStatus.OK, resposta.getStatusCode());
+		
+	}
+	
 }
 ```
 
@@ -345,7 +506,7 @@ Observe que como habilitamos em nosso Blog Pessoal o **Spring Security** com aut
 ```java
 ResponseEntity<String> resposta = testRestTemplate
 .withBasicAuth("admin@email.com.br", "admin123")
-.exchange("/v1/fornecedor", HttpMethod.GET, null, String.class);
+.exchange("/usuarios/all", HttpMethod.GET, null, String.class);
 ```
 
 

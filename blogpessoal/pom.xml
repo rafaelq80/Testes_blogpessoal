@@ -51,16 +51,7 @@
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
-		
-		<!-- Dependência Postegres SQL -->
-		
-		<!-- <dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-		</dependency> -->
-
-		<!-- Dependência MySQL -->
-		
+				
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>

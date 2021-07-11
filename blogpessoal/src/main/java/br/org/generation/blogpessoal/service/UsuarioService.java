@@ -25,7 +25,7 @@ public class UsuarioService {
 public Optional<Usuario> cadastrarUsuario(Usuario usuario) {
 	
 		// Verifica se o usuário (email) existe
-		if(usuarioRepository.findByLogin(usuario.getLogin()).isPresent())
+		if(usuarioRepository.findByUsuario(usuario.getUsuario()).isPresent())
 			throw new ResponseStatusException(
 			          	HttpStatus.BAD_REQUEST, "Usuário já existe!", null);
 
@@ -73,13 +73,13 @@ public Optional<Usuario> cadastrarUsuario(Usuario usuario) {
 	public Optional<UsuarioLogin> Logar(Optional<UsuarioLogin> usuarioLogin) {
 
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		Optional<Usuario> usuario = usuarioRepository.findByLogin(usuarioLogin.get().getLogin());
+		Optional<Usuario> usuario = usuarioRepository.findByUsuario(usuarioLogin.get().getUsuario());
 
 		if (usuario.isPresent()) {
 			
 			if (encoder.matches(usuarioLogin.get().getSenha(), usuario.get().getSenha())) {
 
-				String auth = usuarioLogin.get().getLogin() + ":" + usuarioLogin.get().getSenha();
+				String auth = usuarioLogin.get().getUsuario() + ":" + usuarioLogin.get().getSenha();
 				byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")));
 				String authHeader = "Basic " + new String(encodedAuth);
 

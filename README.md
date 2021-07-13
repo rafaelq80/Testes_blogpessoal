@@ -51,7 +51,7 @@ Para:
 
 Agora vamos configurar um Banco de dados de testes para não usar o Banco de dados principal.
 
-1) No lado esquerdo superior, na Guia **Project**, na Package **src/test**, clique com o botão direito do mouse e clique na opção **New->Source folder**
+1) No lado esquerdo superior, na Guia **Package Explorer**, na Package **src/test**, clique com o botão direito do mouse e clique na opção **New->Source folder**
 
 <div align="center"><img  src="https://i.imgur.com/0afI6KK.png" title="source: imgur.com" /></div>
 
@@ -61,7 +61,7 @@ Agora vamos configurar um Banco de dados de testes para não usar o Banco de dad
 
 3) Na nova Source Folder (**src/test/resources**) , crie o arquivo **application.properties**, para configurarmos a conexão com o Banco de Dados de testes
 
-4) No lado esquerdo superior, na Guia **Project**, na Package **src/test/resources**, clique com o botão direito do mouse e clique na opção **New->File**.
+4) No lado esquerdo superior, na Guia **Package explorer**, na Package **src/test/resources**, clique com o botão direito do mouse e clique na opção **New->File**.
 
 5) Em File name, digite o nome do arquivo (**application.properties**) e clique em **Finish**. 
 

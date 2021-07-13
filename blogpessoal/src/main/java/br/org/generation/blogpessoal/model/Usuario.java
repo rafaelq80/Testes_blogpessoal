@@ -47,7 +47,14 @@ public class Usuario {
 	@JsonIgnoreProperties("usuario")
 	private List <Postagem> postagem;
 
-
+	/** 
+	 * Para efetuar os testes, precisamos criar dois métodos construtores
+	 * 
+	 * 1) Método construtor com todos os atributos, exceto o atributo postagem
+	 * 
+	 * 2) Método construtor vazio sem nenhum atributo
+	*/
+	
 	public Usuario(long id, String nome, String usuario, String senha, LocalDate dataNascimento) {
 		this.id = id;
 		this.nome = nome;

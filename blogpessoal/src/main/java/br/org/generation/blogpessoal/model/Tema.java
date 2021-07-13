@@ -22,7 +22,7 @@ public class Tema{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	@NotNull(message = "Atributo obrigatório")
+	@NotNull(message = "O atributo descição é obrigatório")
 	private String descricao;
 	
 	@OneToMany(mappedBy = "tema", cascade = CascadeType.ALL)

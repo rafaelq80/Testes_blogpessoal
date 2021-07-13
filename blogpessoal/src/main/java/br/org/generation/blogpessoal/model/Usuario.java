@@ -18,7 +18,6 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
 @Entity
 @Table(name = "tb_usuarios")
 public class Usuario {
@@ -41,32 +40,26 @@ public class Usuario {
 	
 	@Column(name = "dt_nascimento")
 	@JsonFormat(pattern="yyyy-MM-dd")
-    private LocalDate dataNascimento; // Atributo adicional
+    private LocalDate dataNascimento;
 	
 	@OneToMany (mappedBy = "usuario", cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties("usuario")
 	private List <Postagem> postagem;
 
-	/** 
-	 * Para efetuar os testes, precisamos criar dois métodos construtores
-	 * 
-	 * 1) Método construtor com todos os atributos, exceto o atributo postagem
-	 * 
-	 * 2) Método construtor vazio sem nenhum atributo
-	*/
 
-	public Usuario(long id, String nome, String usuario, String senha, LocalDate datanascimento) {
+	public Usuario(long id, String nome, String usuario, String senha, LocalDate dataNascimento) {
 		this.id = id;
 		this.nome = nome;
 		this.usuario = usuario;
 		this.senha = senha;
-		this.dataNascimento = datanascimento;
+		this.dataNascimento = dataNascimento;
 	}
 
 	public Usuario() {	}
 
+
 	public long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(long id) {
@@ -74,7 +67,7 @@ public class Usuario {
 	}
 
 	public String getNome() {
-		return nome;
+		return this.nome;
 	}
 
 	public void setNome(String nome) {
@@ -82,7 +75,7 @@ public class Usuario {
 	}
 
 	public String getUsuario() {
-		return usuario;
+		return this.usuario;
 	}
 
 	public void setUsuario(String usuario) {
@@ -90,25 +83,24 @@ public class Usuario {
 	}
 
 	public String getSenha() {
-		return senha;
+		return this.senha;
 	}
 
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
 
-	public LocalDate getDatanascimento() {
-		return dataNascimento;
+	public LocalDate getDataNascimento() {
+		return this.dataNascimento;
 	}
 
-	public void setDatanascimento(LocalDate datanascimento) {
-		this.dataNascimento = datanascimento;
+	public void setDataNascimento(LocalDate dataNascimento) {
+		this.dataNascimento = dataNascimento;
 	}
 
 	public List<Postagem> getPostagem() {
-		return postagem;
+		return this.postagem;
 	}
-
 
 	public void setPostagem(List<Postagem> postagem) {
 		this.postagem = postagem;

@@ -63,12 +63,6 @@ public class TemaController {
 	public void delete(@PathVariable long id) {
 		temaRepository.deleteById(id);
 	}
-
-	/**
-	 * 
-	 * Calcula o numero de postagens por tema
-	 * 
-	 */
 	
 	@GetMapping("/trendtopics")
 	public ResponseEntity<List<Tema>> getTrendTopics() {

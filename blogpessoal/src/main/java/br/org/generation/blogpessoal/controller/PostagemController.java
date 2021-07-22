@@ -62,12 +62,6 @@ public class PostagemController {
 		postagemRepository.deleteById(id);
 
 	}	
-	
-	/**
-	 * 
-	 * Curtir postagem
-	 * 
-	 */
 
 	@PutMapping("/curtir/{id}")
 	public ResponseEntity<Postagem> putCurtirPostagemId (@PathVariable Long id){
@@ -75,12 +69,6 @@ public class PostagemController {
 		return ResponseEntity.status(HttpStatus.OK).body(postagemService.curtir(id));
 	
 	}
-	
-	/**
-	 * 
-	 * Descurtir postagem
-	 * 
-	 */
 
 	@PutMapping("/descurtir/{id}")
 	public ResponseEntity<Postagem> putDescurtirPostagemId (@PathVariable Long id){

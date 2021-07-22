@@ -49,23 +49,27 @@ Para:
 
 <h2 id="dtb">Banco de Dados</h2>
 
+
+
 Agora vamos configurar um Banco de dados de testes para não usar o Banco de dados principal.
 
-1) No lado esquerdo superior, na Guia **Package Explorer**, na Package **src/test**, clique com o botão direito do mouse e clique na opção **New->Source folder**
+1) No lado esquerdo superior, na Guia **Package Explorer**, clique sobre a pasta do projeto com o botão direito do mouse e clique na opção **New->Source folder**
 
-<div align="center"><img  src="https://i.imgur.com/0afI6KK.png" title="source: imgur.com" /></div>
+<div align="center"><img src="https://i.imgur.com/GYKQsnW.png" title="source: imgur.com" /></div>
 
 2) Em **Source Folder**, no item **Folder name**, informe o caminho como mostra a figura abaixo (**src/test/resources**), e clique em **Finish**:
 
-<div align="center"><img src="https://i.imgur.com/1GrfXk5.png" title="source: imgur.com"/></div>
+<div align="center"><img src="https://i.imgur.com/lZ6FEDX.png" title="source: imgur.com" /></div>
 
-3) Na nova Source Folder (**src/test/resources**) , crie o arquivo **application.properties**, para configurarmos a conexão com o Banco de Dados de testes
+3. Na nova Source Folder (**src/test/resources**) , crie o arquivo **application.properties**, para configurarmos a conexão com o Banco de Dados de testes
 
-4) No lado esquerdo superior, na Guia **Package explorer**, na Package **src/test/resources**, clique com o botão direito do mouse e clique na opção **New->File**.
+4. No lado esquerdo superior, na Guia **Package explorer**, na Package **src/test/resources**, clique com o botão direito do mouse e clique na opção **New->File**.
 
-5) Em File name, digite o nome do arquivo (**application.properties**) e clique em **Finish**. 
+   <div align="center"><img src="https://i.imgur.com/j7ckkJy.png" title="source: imgur.com" /></div>
 
-<div align="center"><a href="https://imgur.com/4rp3XFT"><img src="https://i.imgur.com/4rp3XFT.png" title="source: imgur.com" /></a></div>
+5. Em File name, digite o nome do arquivo (**application.properties**) e clique em **Finish**. 
+
+<div align="center"><img src="https://i.imgur.com/TGusKTm.png" title="source: imgur.com" /></div>
 
 6) Veja o arquivo criado na  **Package Explorer** 
 
@@ -89,23 +93,22 @@ spring.jackson.time-zone=Brazil/East
 
 server.error.include-stacktrace=NEVER
 ```
-<<<<<<< HEAD
+
 Observe que o nome do Banco de dados possui a palavra **teste** para indicar que será apenas para a execução dos testes.
 
-Não esqueça de configurar a senha do usuário root .
-=======
-Observe que o nome do Banco de dados possui a palavra **teste** para indicar que este banco será utilizado apenas para a execução dos testes.
-
 Não esqueça de configurar a senha do usuário root.
->>>>>>> c817e861041bcb9191020b1ce10cad73dedc318b
+
+
 
 <h2 id="pac">Estrutura de pacotes</h2>
 
-Na Source Folder de Testes (**src/test/java**) , observe que existe uma estrutura de pacotes idêntica a Source Folder Main (**src/main/java**). Crie na Source Folder de Testes as packages Model, Repository e Controller. 
+
+
+Na Source Folder de Testes (**src/test/java**) , observe que existe uma estrutura de pacotes idêntica a Source Folder Main (**src/main/java**). Crie na Source Folder de Testes as packages Model, Repository e Controller como mostra a figura abaixo. 
 
 <div align="center"><img src="https://i.imgur.com/Z00I4BB.png" title="source: imgur.com" /></div>
 
-O Processo de criação dos arquivos é o mesmo do código principal, exceto o nome dos arquivos que deverão ser iguais aos arquivos da Source Folder Main (**src/main/java**) acrescentando a palavra Test no final. 
+O Processo de criação dos arquivos é o mesmo do código principal, exceto o nome dos arquivos que deverão ser iguais aos arquivos da Source Folder Main (**src/main/java**) acrescentando a palavra Test no final como mostra a figura abaixo. 
 
 <b>Exemplo: </b>
 <b>UsuarioRepository -> UsuarioRepositoryTest</b>.
@@ -135,6 +138,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -149,42 +153,44 @@ public class Usuario {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	@NotNull
-	@Size(min = 5, max = 100)
+	@NotNull(message = "O atributo nome é obrigatório")
+	@Size(min = 5, max = 100, message = "O atributo nome deve conter no mínimo 05 e no máximo 100 caracteres")
 	private String nome;
 	
-	@NotNull
-	@Email
+	@NotNull(message = "O atributo usuário é obrigatório")
+	@NotBlank(message = "O atributo usuário não pode ser vazio")
+	@Email(message = "O atributo usuário deve ser um email")
 	private String usuario;
 	
-	@NotNull
-	@Size(min = 8)
+	@NotNull(message = "O atributo senha é obrigatório")
+	@Size(min = 8, message = "O atributo senha deve ter no mínimo 8 caracteres")
 	private String senha;
 	
 	@Column(name = "dt_nascimento")
 	@JsonFormat(pattern="yyyy-MM-dd")
-    private LocalDate dataNascimento; // Atributo adicional
+    private LocalDate dataNascimento;
 	
 	@OneToMany (mappedBy = "usuario", cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties("usuario")
 	private List <Postagem> postagem;
 
-// Primeiro método Construtor
+	// Primeiro método Construtor
 
-	public Usuario(long id, String nome, String usuario, String senha, LocalDate datanascimento) {
+	public Usuario(long id, String nome, String usuario, String senha, LocalDate dataNascimento) {
 		this.id = id;
 		this.nome = nome;
 		this.usuario = usuario;
 		this.senha = senha;
-		this.dataNascimento = datanascimento;
+		this.dataNascimento = dataNascimento;
 	}
 
-// Segundo método Construtor
+	// Segundo método Construtor
 
 	public Usuario() {	}
 
+
 	public long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(long id) {
@@ -192,7 +198,7 @@ public class Usuario {
 	}
 
 	public String getNome() {
-		return nome;
+		return this.nome;
 	}
 
 	public void setNome(String nome) {
@@ -200,7 +206,7 @@ public class Usuario {
 	}
 
 	public String getUsuario() {
-		return usuario;
+		return this.usuario;
 	}
 
 	public void setUsuario(String usuario) {
@@ -208,25 +214,24 @@ public class Usuario {
 	}
 
 	public String getSenha() {
-		return senha;
+		return this.senha;
 	}
 
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
 
-	public LocalDate getDatanascimento() {
-		return dataNascimento;
+	public LocalDate getDataNascimento() {
+		return this.dataNascimento;
 	}
 
-	public void setDatanascimento(LocalDate datanascimento) {
-		this.dataNascimento = datanascimento;
+	public void setDataNascimento(LocalDate dataNascimento) {
+		this.dataNascimento = dataNascimento;
 	}
 
 	public List<Postagem> getPostagem() {
-		return postagem;
+		return this.postagem;
 	}
-
 
 	public void setPostagem(List<Postagem> postagem) {
 		this.postagem = postagem;
@@ -237,16 +242,18 @@ public class Usuario {
 ```
 
 
+
 <h2 id="mod">Classe UsuarioTest</h2>
 
-Crie a classe UsuarioTest na package **model**, na Source Folder de Testes (**src/test/java**) 
+
+
+A Classe UsuarioTest será utilizada parta testar a Classe Model do Usuario. Crie a classe UsuarioTest na package **model**, dentro da Source Folder de Testes (**src/test/java**) 
 
 **Importante:** O Teste da Classe Usuario da camada Model, não utiliza o Banco de Dados.
 
 ```java
 package br.org.generation.blogpessoal.model;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
@@ -295,29 +302,18 @@ public class UsuarioTest {
 		assertTrue(violacao.isEmpty());
 	}
 
-	@Test
-	@DisplayName("❌ Valida Atributos Nulos")
-	void testValidaAtributosNulos() {
-		
-		usuarioErro.setUsuario("paulo@email.com.br");
-
-		Set<ConstraintViolation<Usuario>> violacao = validator.validate(usuarioErro);
-		
-		System.out.println(violacao.toString());
-
-		assertFalse(violacao.isEmpty());
-		
-	}
 }
 ```
 
-💥 Para inserir os emojis na annotation @DisplayName, utilize as teclas de atalho **Windows + Ponto**
+💥 Para inserir os emojis na annotation **@DisplayName**, utilize as teclas de atalho **Windows + Ponto**
 
 
 
 <h2 id="rep">Classe UsuarioRepositoryTest</h2>
 
-Crie a classe UsuarioRepositoryTest na package **repository**, na Source Folder de Testes (**src/test/java**)
+
+
+A Classe UsuarioRepositoryTest será utilizada parta testar a Classe Repository do Usuario. Crie a classe UsuarioRepositoryTest na package **repository**, na Source Folder de Testes (**src/test/java**)
 
 **Importante:** O Teste da Classe UsuarioRepository da camada Repository, utiliza o Banco de Dados, entretanto ele não criptografa a senha ao gravar um novo usuario no Banco de dados. O teste não utiliza a Classe de Serviço UsuarioService para gravar o usuário. O Teste utiliza o método save(), da Classe JpaRepository de forma direta. 
 
@@ -398,11 +394,14 @@ public class UsuarioRepositoryTest {
 ```
 
 
+
 <h2 id="ctr">Classe UsuarioControllerTest</h2>
 
-Crie a classe UsuarioControllerTest na package **controller**, na Source Folder de Testes (**src/test/java**) 
 
-**Importante:** Para executar todos os testes da Classe UsuarioControllerTest de uma única vez, faça o Drop do Banco de Dados de testes antes. Caso contrário será necessário verificar o id do usuário no banco de dados via MySQL Workbench para testar o método Put.
+
+A Classe UsuarioControllerTest será utilizada parta testar a Classe Controller do Usuario. Crie a classe UsuarioControllerTest na package **controller**, na Source Folder de Testes (**src/test/java**) 
+
+**Importante:** Para executar todos os testes da Classe UsuarioControllerTest de uma única vez, faça o Drop do Banco de Dados de testes antes. Caso contrário será necessário verificar o id do usuário que será alterado pelo método PUT no banco de dados via MySQL Workbench antes de executar teste.
 
 ```java
 package br.org.generation.blogpessoal.controller;
@@ -462,10 +461,10 @@ public class UsuarioControllerTest {
 		}
 		
 		LocalDate dataPost = LocalDate.parse("2000-07-22", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        usuario = new Usuario(0L, "João da Silva dos Santos", "joao@email.com.br", "13465278", dataPost);
+        usuario = new Usuario(0L, "Paulo Antunes", "paulo@email.com.br", "13465278", dataPost);
         
 		LocalDate dataPut = LocalDate.parse("2000-07-22", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        usuarioUpdate = new Usuario(2L, "João da Silva dos Santos Souza", "joao@email.com.br", "joao123", dataPut);
+        usuarioUpdate = new Usuario(2L, "Paulo Antunes de Souza", "paulo_souza@email.com.br", "souza123", dataPut);
 	}
 
 	@Test
@@ -519,24 +518,26 @@ ResponseEntity<String> resposta = testRestTemplate
 
 
 
-<h2  id="run">Executando os testes no Eclipse e no STS</h2>
+<h2  id="run">Executando os testes no Eclipse / STS</h2>
+
+
 
 1) No lado esquerdo superior, na Guia **Project**, na Package **src/test/java**, clique com o botão direito do mouse sobre um dos testes e clique na opção **Run As->JUnit Test**.
 
-<a href="https://imgur.com/HJN6A6p"><img src="https://i.imgur.com/HJN6A6p.jpg" title="source: imgur.com" /></a>
+<div align="center"><img src="https://i.imgur.com/Ol2N93J.png" title="source: imgur.com" /></div>
 
 
 2) Para acompanhar os testes, ao lado da Guia **Project**, clique na Guia **JUnit**.
 
-<a href="https://imgur.com/vdLvg6o"><img src="https://i.imgur.com/vdLvg6o.jpg" title="source: imgur.com" /></a>
+<div align="center"><img src="https://i.imgur.com/JvC0kS3.png" title="source: imgur.com" /></div>
 
  3) Se todos os testes passarem, a Guia do JUnit ficará com uma faixa verde (janela 01). Caso algum teste não passe, a Guia do JUnit ficará com uma faixa vermelha (janela 02). Neste caso, observe o item <b>Failure Trace</b> para identificar o (s) erro (s).
 
 <div align="center">
 <table width=100%>
 	<tr>
-		<td width=50%><div align="center"><a href="https://imgur.com/fVb4UAc"><img  src="https://i.imgur.com/fVb4UAc.png" title="source: imgur.com" /></a>
-		<td width=50%><div align="center"><a href="https://imgur.com/xB1obRN"><img src="https://i.imgur.com/xB1obRN.png" title="source: imgur.com" /></a>
+		<td width=50%><div align="center"><img src="https://i.imgur.com/TeiTjQW.png" title="source: imgur.com" /></div>
+		<td width=50%><div align="center"><img src="https://i.imgur.com/7b13sd6.png" title="source: imgur.com" /></div>
 	</tr>
 	<tr>
 		<td><div align="center">Janela 01: <i> Testes aprovados.
@@ -544,9 +545,10 @@ ResponseEntity<String> resposta = testRestTemplate
 	</tr>
 </table>
 </div>
-
-
 Ao escrever testes, sempre verifique se a importação dos pacotes do JUnit na Classe de testes estão corretos. O JUnit 5 tem como pacote base <b><i>org.junit.jupiter.api</i></b>.
+
+
+
 
 <h2 id="ref">Referências</h2>
 

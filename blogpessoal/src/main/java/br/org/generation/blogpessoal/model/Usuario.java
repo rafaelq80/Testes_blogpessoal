@@ -42,20 +42,14 @@ public class Usuario {
 	
 	@Column(name = "dt_nascimento")
 	@JsonFormat(pattern="yyyy-MM-dd")
-    	private LocalDate dataNascimento;
+    private LocalDate dataNascimento;
 	
 	@OneToMany (mappedBy = "usuario", cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties("usuario")
 	private List <Postagem> postagem;
 
-	/** 
-	 * Para efetuar os testes, precisamos criar dois métodos construtores
-	 * 
-	 * 1) Método construtor com todos os atributos, exceto o atributo postagem
-	 * 
-	 * 2) Método construtor vazio sem nenhum atributo
-	*/
-	
+	// Primeiro método Construtor
+
 	public Usuario(long id, String nome, String usuario, String senha, LocalDate dataNascimento) {
 		this.id = id;
 		this.nome = nome;
@@ -63,6 +57,8 @@ public class Usuario {
 		this.senha = senha;
 		this.dataNascimento = dataNascimento;
 	}
+
+	// Segundo método Construtor
 
 	public Usuario() {	}
 

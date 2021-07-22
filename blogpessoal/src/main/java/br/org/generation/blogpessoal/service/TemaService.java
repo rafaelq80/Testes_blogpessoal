@@ -19,12 +19,6 @@ public class TemaService {
 	
 	@Autowired
 	private PostagemRepository postagemRepository;
-	
-	/**
-	 *
-	 * Gera Trendtopics 
-	 *
-	 */
 
 	public List<Tema> trendTopics(){
 		

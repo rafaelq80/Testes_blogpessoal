@@ -12,12 +12,6 @@ public class PostagemService {
 
 	@Autowired
 	private PostagemRepository postagemRepository;
-	
-	/**
-	 *
-	 * Curtir Postagem 
-	 *
-	 */
 
 	public Postagem curtir(Long id) {
 		
@@ -28,12 +22,6 @@ public class PostagemService {
 		return postagemRepository.save(postagem);
 	
 	}
-	
-	/**
-	 *
-	 * Descurtir Postagem 
-	 *
-	 */
 
 	public Postagem descurtir(Long id) {
 		
@@ -52,12 +40,6 @@ public class PostagemService {
 		return postagemRepository.save(postagem);
 	
 	}
-	
-	/**
-	 *
-	 * Buscar Postagem pelo Id
-	 *
-	 */
 
 	private Postagem buscarPostagemPeloId(Long id) {
 		

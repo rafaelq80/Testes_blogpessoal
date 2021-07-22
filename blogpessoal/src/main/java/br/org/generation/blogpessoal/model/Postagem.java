@@ -36,7 +36,7 @@ public class Postagem {
 	private Date data = new java.sql.Date(System.currentTimeMillis());
 
 	@PositiveOrZero
-	private int curtidas; // Atributo adicional
+	private int curtidas;
 	
 	@ManyToOne
 	@JsonIgnoreProperties("postagem")

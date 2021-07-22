@@ -22,7 +22,7 @@ public class Tema{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	@NotNull(message = "O atributo descição é obrigatório")
+	@NotNull(message = "O atributo descrição é obrigatório")
 	private String descricao;
 	
 	@OneToMany(mappedBy = "tema", cascade = CascadeType.ALL)
@@ -30,7 +30,7 @@ public class Tema{
 	private List<Postagem> postagem;
 	
 	@Transient
-	private int qtdTema; // Atributo Trendtopics
+	private int qtdTema;
 	
 	public long getId() {
 		return id;
@@ -63,6 +63,5 @@ public class Tema{
 	public void setQtdTema(int qtdTema) {
 		this.qtdTema = qtdTema;
 	}
-	
 	
 }

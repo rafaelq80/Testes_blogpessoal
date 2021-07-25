@@ -78,7 +78,7 @@ Agora vamos configurar um Banco de dados de testes para não usar o Banco de dad
 7) Insira no arquivo application.properties as seguinte linhas:
 
 ```properties
-spring.jpa.hibernate.ddl-auto=update
+spring.jpa.hibernate.ddl-auto=create-drop
 spring.jpa.database=mysql
 spring.datasource.url=jdbc:mysql://localhost/db_testeblogpessoal?createDatabaseIfNotExist=true&serverTimezone=America/Sao_Paulo&useSSl=false
 spring.datasource.username=root

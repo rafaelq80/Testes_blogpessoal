@@ -39,7 +39,6 @@ public class UsuarioControllerTest {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
-
 	
 	@BeforeAll
 	public void start() throws ParseException {

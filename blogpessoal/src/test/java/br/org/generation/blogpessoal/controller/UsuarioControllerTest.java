@@ -2,7 +2,6 @@ package br.org.generation.blogpessoal.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -41,7 +40,7 @@ public class UsuarioControllerTest {
 	private UsuarioRepository usuarioRepository;
 	
 	@BeforeAll
-	public void start() throws ParseException {
+	public void start() {
 
 		LocalDate dataAdmin = LocalDate.parse("1990-07-22", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         usuarioAdmin = new Usuario(0L, "Administrador", "admin@email.com.br", "admin123", dataAdmin);
@@ -67,7 +66,8 @@ public class UsuarioControllerTest {
 
 		HttpEntity<Usuario> request = new HttpEntity<Usuario>(usuario);
 
-		ResponseEntity<Usuario> resposta = testRestTemplate.exchange("/usuarios/cadastrar", HttpMethod.POST, request, Usuario.class);
+		ResponseEntity<Usuario> resposta = testRestTemplate
+			.exchange("/usuarios/cadastrar", HttpMethod.POST, request, Usuario.class);
 
 		assertEquals(HttpStatus.CREATED, resposta.getStatusCode());
 
@@ -78,7 +78,9 @@ public class UsuarioControllerTest {
     @DisplayName("👍 Listar todos os Usuários!")
 	public void deveMostrarTodosUsuarios() {
 
-		ResponseEntity<String> resposta = testRestTemplate.withBasicAuth("admin@email.com.br", "admin123").exchange("/usuarios/all", HttpMethod.GET, null, String.class);
+		ResponseEntity<String> resposta = testRestTemplate
+			.withBasicAuth("admin@email.com.br", "admin123")
+			.exchange("/usuarios/all", HttpMethod.GET, null, String.class);
 
 		assertEquals(HttpStatus.OK, resposta.getStatusCode());
 	}
@@ -90,7 +92,9 @@ public class UsuarioControllerTest {
 
 		HttpEntity<Usuario> request = new HttpEntity<Usuario>(usuarioUpdate);
 
-		ResponseEntity<Usuario> resposta = testRestTemplate.withBasicAuth("admin@email.com.br", "admin123").exchange("/usuarios/alterar", HttpMethod.PUT, request, Usuario.class);
+		ResponseEntity<Usuario> resposta = testRestTemplate
+			.withBasicAuth("admin@email.com.br", "admin123")
+			.exchange("/usuarios/alterar", HttpMethod.PUT, request, Usuario.class);
 
 		assertEquals(HttpStatus.OK, resposta.getStatusCode());
 		

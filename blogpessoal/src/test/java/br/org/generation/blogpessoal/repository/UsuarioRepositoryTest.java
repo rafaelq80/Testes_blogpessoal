@@ -3,7 +3,6 @@ package br.org.generation.blogpessoal.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -27,7 +26,7 @@ public class UsuarioRepositoryTest {
 	private UsuarioRepository usuarioRepository;
 	
 	@BeforeAll
-	void start() throws ParseException {
+	void start(){
 	   
 		LocalDate data = LocalDate.parse("2000-07-22", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		
@@ -51,7 +50,7 @@ public class UsuarioRepositoryTest {
 
 	@Test
 	@DisplayName("💾 Retorna o nome")
-	public void findByNomeRetornaNome() throws Exception {
+	public void findByNomeRetornaNome() {
 
 		Usuario usuario = usuarioRepository.findByNome("João da Silva");
 		assertTrue(usuario.getNome().equals("João da Silva"));
@@ -68,7 +67,7 @@ public class UsuarioRepositoryTest {
 	@AfterAll
 	public void end() {
 		
-		usuarioRepository.deleteAll();
+		System.out.println("Teste Finalizado!");
 		
 	}
 }

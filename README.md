@@ -2,7 +2,7 @@
 
 Nesta atividade iremos implementar os testes nas Camadas Model, Repository e Controller da Classe Usuário. 
 
-Utilize o e-book sobre SpringTesting (<a href="https://github.com/rafaelq80/tdd_blogpessoal/blob/main/ebook/spring_testing.pdf" target="_blank">Clique aqui</a>) e as instruções descritas abaixo como referências para implementar  os testes nas 3 Camadas da Classe Usuario.
+Utilize o e-book sobre SpringTesting (<a href="https://github.com/rafaelq80/tdd_blogpessoal/blob/main/ebook/junit_teste_blog_pessoal.pdf" target="_blank">Clique aqui</a>) e as instruções descritas abaixo como referências para implementar  os testes nas 3 Camadas da Classe Usuario.
 
 ## Boas Práticas
 
@@ -301,6 +301,16 @@ public class UsuarioTest {
 
 		assertTrue(violacao.isEmpty());
 	}
+    
+    @Test
+	@DisplayName("✖ Não Valida Atributos Nulos")
+	void  testNaoValidaAtributos() {
+
+		Set<ConstraintViolation<Usuario>> violacao = validator.validate(usuarioNulo);
+		System.out.println(violacao.toString());
+
+		assertTrue(violacao.isEmpty());
+	}
 
 }
 ```
@@ -522,7 +532,7 @@ ResponseEntity<String> resposta = testRestTemplate
 
 
 
-1) No lado esquerdo superior, na Guia **Project**, na Package **src/test/java**, clique com o botão direito do mouse sobre um dos testes e clique na opção **Run As->JUnit Test**.
+1) No lado esquerdo superior, na Guia **Project**, na Package **src/test/java**, clique com o botão direito do mouse sobre o teste que você deseja executar e clique na opção **Run As->JUnit Test**.
 
 <div align="center"><img src="https://i.imgur.com/Ol2N93J.png" title="source: imgur.com" /></div>
 

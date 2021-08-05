@@ -9,7 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -28,10 +27,7 @@ public class Tema{
 	@OneToMany(mappedBy = "tema", cascade = CascadeType.ALL)
 	@JsonIgnoreProperties("tema")
 	private List<Postagem> postagem;
-	
-	@Transient
-	private int qtdTema;
-	
+		
 	public long getId() {
 		return id;
 	}
@@ -56,12 +52,4 @@ public class Tema{
 		this.postagem = postagem;
 	}
 
-	public int getQtdTema() {
-		return qtdTema;
-	}
-
-	public void setQtdTema(int qtdTema) {
-		this.qtdTema = qtdTema;
-	}
-	
 }

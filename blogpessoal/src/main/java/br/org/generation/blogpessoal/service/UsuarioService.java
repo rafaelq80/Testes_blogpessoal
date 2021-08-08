@@ -22,7 +22,7 @@ public class UsuarioService {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 
-	public Usuario cadastrarUsuario(Usuario usuario) {
+	public Optional <Usuario> cadastrarUsuario(Usuario usuario) {
 		
 		if(usuarioRepository.findByUsuario(usuario.getUsuario()).isPresent())
 			throw new ResponseStatusException(
@@ -39,7 +39,7 @@ public class UsuarioService {
 		String senhaEncoder = encoder.encode(usuario.getSenha());
 		usuario.setSenha(senhaEncoder);
 
-		return usuarioRepository.save(usuario);
+		return Optional.of(usuarioRepository.save(usuario));
 	}
 
 	public Optional<Usuario> atualizarUsuario(Usuario usuario){

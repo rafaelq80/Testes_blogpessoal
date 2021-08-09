@@ -91,7 +91,7 @@ spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.MySQL8Dialect
 spring.jackson.date-format=yyyy-MM-dd HH:mm:ss
 spring.jackson.time-zone=Brazil/East
 
-server.error.include-stacktrace=NEVER
+
 ```
 
 Observe que o nome do Banco de dados possui a palavra **teste** para indicar que será apenas para a execução dos testes.

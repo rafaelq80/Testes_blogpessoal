@@ -22,42 +22,42 @@ import br.org.generation.blogpessoal.repository.TemaRepository;
 @RequestMapping("/temas")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class TemaController {
-    
-    @Autowired
+
+	@Autowired
 	private TemaRepository temaRepository;
 
 	@GetMapping
 	public ResponseEntity<List<Tema>> getAll() {
 		return ResponseEntity.ok(temaRepository.findAll());
-	
+
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Tema> getById(@PathVariable long id) {
 		return temaRepository.findById(id)
-				.map(resp -> ResponseEntity.ok(resp))
-				.orElse(ResponseEntity.notFound().build());
+		.map(resp -> ResponseEntity.ok(resp))
+		.orElse(ResponseEntity.notFound().build());
 	}
-	
+
 	@GetMapping("/descricao/{descricao}")
-	public ResponseEntity<List<Tema>> GetByDescricao(@PathVariable String descricao) {
+	public ResponseEntity<List<Tema>> getByDescricao(@PathVariable String descricao) {
 		return ResponseEntity.ok(temaRepository.findAllByDescricaoContainingIgnoreCase(descricao));
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<Tema> post (@RequestBody Tema tema){
-		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(temaRepository.save(tema));
+	public ResponseEntity<Tema> postTema(@RequestBody Tema tema) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(temaRepository.save(tema));
 	}
 
 	@PutMapping
-	public ResponseEntity<Tema> put (@RequestBody Tema tema){
-		return ResponseEntity.ok(temaRepository.save(tema));				
+	public ResponseEntity<Tema> putTema(@RequestBody Tema tema) {
+		return ResponseEntity.status(HttpStatus.OK).body(temaRepository.save(tema));
+
 	}
-	
+
 	@DeleteMapping("/{id}")
-	public void delete(@PathVariable long id) {
+	public void deleteTema(@PathVariable long id) {
 		temaRepository.deleteById(id);
 	}
-	
+
 }

@@ -3,6 +3,7 @@ package br.org.generation.blogpessoal.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -26,12 +27,11 @@ public class UsuarioRepositoryTest {
 	private UsuarioRepository usuarioRepository;
 	
 	@BeforeAll
-	void start(){
+	void start() throws ParseException {
 	   
 		LocalDate data = LocalDate.parse("2000-07-22", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		
 		Usuario usuario = new Usuario(0, "João da Silva", "joao@email.com.br", "13465278", data);
-
 		if(!usuarioRepository.findByUsuario(usuario.getUsuario()).isPresent())
 			usuarioRepository.save(usuario);
 		
@@ -47,15 +47,15 @@ public class UsuarioRepositoryTest {
         if(!usuarioRepository.findByUsuario(usuario.getUsuario()).isPresent())
             usuarioRepository.save(usuario);
 	}
-
+	
 	@Test
 	@DisplayName("💾 Retorna o nome")
-	public void findByNomeRetornaNome() {
+	public void findByNomeRetornaNome() throws Exception {
 
 		Usuario usuario = usuarioRepository.findByNome("João da Silva");
 		assertTrue(usuario.getNome().equals("João da Silva"));
 	}
-
+	
 	@Test
 	@DisplayName("💾 Retorna 3 usuarios")
 	public void findAllByNomeContainingIgnoreCaseRetornaTresUsuarios() {
@@ -67,7 +67,7 @@ public class UsuarioRepositoryTest {
 	@AfterAll
 	public void end() {
 		
-		System.out.println("Teste Finalizado!");
+		usuarioRepository.deleteAll();
 		
 	}
 }

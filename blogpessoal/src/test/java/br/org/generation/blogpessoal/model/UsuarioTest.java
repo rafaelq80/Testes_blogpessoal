@@ -22,7 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 public class UsuarioTest {
     
     public Usuario usuario;
-	public Usuario usuarioNulo = new Usuario();
+    public Usuario usuarioErro = new Usuario();
 
 	@Autowired
 	private  ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -33,8 +33,7 @@ public class UsuarioTest {
 	public void start() {
 
 		LocalDate data = LocalDate.parse("2000-07-22", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-		
-        usuario = new Usuario(0L, "João da Silva", "joao@email.com.br", "13465278", data);
+		usuario = new Usuario(0L, "João da Silva", "joao@email.com.br", "13465278", data);
 
 	}
 
@@ -48,16 +47,16 @@ public class UsuarioTest {
 
 		assertTrue(violacao.isEmpty());
 	}
-
-	@Test
+    
+    @Test
 	@DisplayName("✖ Não Valida Atributos Nulos")
-	void testNaoValidaAtributos() {
+	void  testNaoValidaAtributos() {
 
-		Set<ConstraintViolation<Usuario>> violacao = validator.validate(usuarioNulo);
-		
+		Set<ConstraintViolation<Usuario>> violacao = validator.validate(usuarioErro);
 		System.out.println(violacao.toString());
 
 		assertTrue(violacao.isEmpty());
 	}
 
 }
+

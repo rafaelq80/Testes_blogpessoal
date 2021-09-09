@@ -306,7 +306,7 @@ public class UsuarioTest {
 	@DisplayName("✖ Não Valida Atributos Nulos")
 	void  testNaoValidaAtributos() {
 
-		Set<ConstraintViolation<Usuario>> violacao = validator.validate(usuarioNulo);
+		Set<ConstraintViolation<Usuario>> violacao = validator.validate(usuarioErro);
 		System.out.println(violacao.toString());
 
 		assertTrue(violacao.isEmpty());

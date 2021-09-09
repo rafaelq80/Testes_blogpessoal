@@ -91,7 +91,7 @@ spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.MySQL8Dialect
 spring.jackson.date-format=yyyy-MM-dd HH:mm:ss
 spring.jackson.time-zone=Brazil/East
 
-server.error.include-stacktrace=NEVER
+
 ```
 
 Observe que o nome do Banco de dados possui a palavra **teste** para indicar que será apenas para a execução dos testes.
@@ -306,7 +306,7 @@ public class UsuarioTest {
 	@DisplayName("✖ Não Valida Atributos Nulos")
 	void  testNaoValidaAtributos() {
 
-		Set<ConstraintViolation<Usuario>> violacao = validator.validate(usuarioNulo);
+		Set<ConstraintViolation<Usuario>> violacao = validator.validate(usuarioErro);
 		System.out.println(violacao.toString());
 
 		assertTrue(violacao.isEmpty());
@@ -507,7 +507,7 @@ public class UsuarioControllerTest {
 
 		HttpEntity<Usuario> request = new HttpEntity<Usuario>(usuarioUpdate);
 
-		ResponseEntity<Usuario> resposta = testRestTemplate.withBasicAuth("admin@email.com.br", "admin123").exchange("/usuarios/alterar", HttpMethod.PUT, request, Usuario.class);
+		ResponseEntity<Usuario> resposta = testRestTemplate.withBasicAuth("admin@email.com.br", "admin123").exchange("/usuarios/atualizar", HttpMethod.PUT, request, Usuario.class);
 		
 		assertEquals(HttpStatus.OK, resposta.getStatusCode());
 		

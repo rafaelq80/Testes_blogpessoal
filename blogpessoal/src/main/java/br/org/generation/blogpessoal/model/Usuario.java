@@ -44,7 +44,11 @@ public class Usuario {
 	@JsonIgnoreProperties("usuario")
 	private List<Postagem> postagem;
 
-	
+	/**
+	 * Construtor com atributos da Classe Usuario
+	 * 
+	 *  *** Não adicionar o atributo postagem ***
+	 */
 	public Usuario(long id, String nome, String usuario, String senha, LocalDate dataNascimento) {
 		
 		this.id = id;
@@ -55,7 +59,11 @@ public class Usuario {
 		
 	}
 
-	
+	/**
+	 * Construtor sem atributos da Classe Usuario
+	 * 
+	 * Será utilizado para gerar Objetos Nulos
+	 */
 	public Usuario() { }
 	
 

@@ -154,12 +154,9 @@ public class Usuario {
 	private long id;
 	
 	@NotNull(message = "O atributo nome é obrigatório")
-	@Size(min = 5, max = 100, message = "O atributo nome deve conter no mínimo 05 e no máximo 100 caracteres")
 	private String nome;
 	
 	@NotNull(message = "O atributo usuário é obrigatório")
-	@NotBlank(message = "O atributo usuário não pode ser vazio")
-	@Email(message = "O atributo usuário deve ser um email")
 	private String usuario;
 	
 	@NotNull(message = "O atributo senha é obrigatório")
@@ -168,6 +165,7 @@ public class Usuario {
 	
 	@Column(name = "dt_nascimento")
 	@JsonFormat(pattern="yyyy-MM-dd")
+    @NotNull(message = "O atributo Data de Nascimento é Obrigatório!")
     private LocalDate dataNascimento;
 	
 	@OneToMany (mappedBy = "usuario", cascade = CascadeType.REMOVE)

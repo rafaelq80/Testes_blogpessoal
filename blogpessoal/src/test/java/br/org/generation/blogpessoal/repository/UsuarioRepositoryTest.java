@@ -48,6 +48,10 @@ public class UsuarioRepositoryTest {
             usuarioRepository.save(usuario);
 	}
 	
+	/**
+	 * Não esqueça de criar o método findByNome(String nome) na Interface
+	 * UsuarioRepository (Pacote main)
+	 */
 	@Test
 	@DisplayName("💾 Retorna o nome")
 	public void findByNomeRetornaNome() throws Exception {
@@ -56,6 +60,10 @@ public class UsuarioRepositoryTest {
 		assertTrue(usuario.getNome().equals("João da Silva"));
 	}
 	
+	/**
+	 * Não esqueça de criar o método findAllByNomeContainingIgnoreCase(String nome) 
+	 * na Interface UsuarioRepository (Pacote main)
+	 */
 	@Test
 	@DisplayName("💾 Retorna 3 usuarios")
 	public void findAllByNomeContainingIgnoreCaseRetornaTresUsuarios() {

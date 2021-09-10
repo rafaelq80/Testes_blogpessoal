@@ -68,22 +68,31 @@ public class UsuarioControllerTest {
 
 		HttpEntity<Usuario> request = new HttpEntity<Usuario>(usuario);
 
-		ResponseEntity<Usuario> resposta = testRestTemplate.exchange("/usuarios/cadastrar", HttpMethod.POST, request, Usuario.class);
+		ResponseEntity<Usuario> resposta = testRestTemplate
+			.exchange("/usuarios/cadastrar", HttpMethod.POST, request, Usuario.class);
 		
 		assertEquals(HttpStatus.CREATED, resposta.getStatusCode());
 
 	}
 
+	/**
+	 * Este método requer autenticação (login)
+	 */
 	@Test
 	@Order(2)
     @DisplayName("👍 Listar todos os Usuários!")
 	public void deveMostrarTodosUsuarios() {
 		
-		ResponseEntity<String> resposta = testRestTemplate.withBasicAuth("admin@email.com.br", "admin123").exchange("/usuarios/all", HttpMethod.GET, null, String.class);
+		ResponseEntity<String> resposta = testRestTemplate
+			.withBasicAuth("admin@email.com.br", "admin123")
+			.exchange("/usuarios/all", HttpMethod.GET, null, String.class);
 		
 		assertEquals(HttpStatus.OK, resposta.getStatusCode());
 	}
 	
+	/**
+	 * Este método requer autenticação (login)
+	 */
 	@Test
     @Order(3)
 	@DisplayName("😳 Alterar Usuário!")
@@ -91,7 +100,9 @@ public class UsuarioControllerTest {
 
 		HttpEntity<Usuario> request = new HttpEntity<Usuario>(usuarioUpdate);
 
-		ResponseEntity<Usuario> resposta = testRestTemplate.withBasicAuth("admin@email.com.br", "admin123").exchange("/usuarios/atualizar", HttpMethod.PUT, request, Usuario.class);
+		ResponseEntity<Usuario> resposta = testRestTemplate
+			.withBasicAuth("admin@email.com.br", "admin123")
+			.exchange("/usuarios/atualizar", HttpMethod.PUT, request, Usuario.class);
 		
 		assertEquals(HttpStatus.OK, resposta.getStatusCode());
 		

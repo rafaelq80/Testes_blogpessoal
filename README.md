@@ -2,7 +2,7 @@
 
 Nesta atividade iremos implementar os testes nas Camadas Model, Repository e Controller da Classe Usuário. 
 
-Utilize o e-book sobre SpringTesting (<a href="https://github.com/rafaelq80/tdd_blogpessoal/blob/main/ebook/junit_teste_blog_pessoal.pdf" target="_blank">Clique aqui</a>) e as instruções descritas abaixo como referências para implementar  os testes nas 3 Camadas da Classe Usuario.
+
 
 ## Boas Práticas
 

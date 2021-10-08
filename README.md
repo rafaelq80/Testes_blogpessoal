@@ -331,7 +331,6 @@ package br.org.generation.blogpessoal.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -355,7 +354,7 @@ public class UsuarioRepositoryTest {
 	private UsuarioRepository usuarioRepository;
 	
 	@BeforeAll
-	void start() throws ParseException {
+	void start() {
 	   
 		LocalDate data = LocalDate.parse("2000-07-22", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		
@@ -416,7 +415,6 @@ package br.org.generation.blogpessoal.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -456,7 +454,7 @@ public class UsuarioControllerTest {
 	private UsuarioRepository usuarioRepository;
 	
 	@BeforeAll
-	public void start() throws ParseException {
+	public void start() {
 
 		LocalDate dataAdmin = LocalDate.parse("1990-07-22", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         usuarioAdmin = new Usuario(0L, "Administrador", "admin@email.com.br", "admin123", dataAdmin);

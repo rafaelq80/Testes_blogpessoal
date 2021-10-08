@@ -2,7 +2,6 @@ package br.org.generation.blogpessoal.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -42,7 +41,7 @@ public class UsuarioControllerTest {
 	private UsuarioRepository usuarioRepository;
 	
 	@BeforeAll
-	public void start() throws ParseException {
+	public void start() {
 
 		LocalDate dataAdmin = LocalDate.parse("1990-07-22", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         usuarioAdmin = new Usuario(0L, "Administrador", "admin@email.com.br", "admin123", dataAdmin);

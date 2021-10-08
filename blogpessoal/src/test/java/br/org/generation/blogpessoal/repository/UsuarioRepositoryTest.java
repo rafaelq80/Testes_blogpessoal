@@ -3,7 +3,6 @@ package br.org.generation.blogpessoal.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -27,7 +26,7 @@ public class UsuarioRepositoryTest {
 	private UsuarioRepository usuarioRepository;
 	
 	@BeforeAll
-	void start() throws ParseException {
+	void start() {
 	   
 		LocalDate data = LocalDate.parse("2000-07-22", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		

@@ -2,17 +2,14 @@ package br.org.generation.blogpessoal.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -23,88 +20,90 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import br.org.generation.blogpessoal.model.Usuario;
-import br.org.generation.blogpessoal.repository.UsuarioRepository;
+import br.org.generation.blogpessoal.service.UsuarioService;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class UsuarioControllerTest {
-    
+
 	@Autowired
 	private TestRestTemplate testRestTemplate;
-	
-	private Usuario usuario;
-	private Usuario usuarioUpdate;
-	private Usuario usuarioAdmin;
 
 	@Autowired
-	private UsuarioRepository usuarioRepository;
-	
-	@BeforeAll
-	public void start() {
-
-		LocalDate dataAdmin = LocalDate.parse("1990-07-22", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        usuarioAdmin = new Usuario(0L, "Administrador", "admin@email.com.br", "admin123", dataAdmin);
-
-		if(!usuarioRepository.findByUsuario(usuarioAdmin.getUsuario()).isPresent()) {
-
-            HttpEntity<Usuario> request = new HttpEntity<Usuario>(usuarioAdmin);
-			testRestTemplate.exchange("/usuarios/cadastrar", HttpMethod.POST, request, Usuario.class);
-			
-		}
-		
-		LocalDate dataPost = LocalDate.parse("2000-07-22", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        usuario = new Usuario(0L, "Paulo Antunes", "paulo@email.com.br", "13465278", dataPost);
-        
-		LocalDate dataPut = LocalDate.parse("2000-07-22", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        usuarioUpdate = new Usuario(2L, "Paulo Antunes de Souza", "paulo_souza@email.com.br", "souza123", dataPut);
-	}
+	private UsuarioService usuarioService;
 
 	@Test
 	@Order(1)
-    @DisplayName("✔ Cadastrar Usuário!")
-	public void deveRealizarPostUsuario() {
+	@DisplayName("Cadastrar Um Usuário")
+	public void deveCriarUmUsuario() {
 
-		HttpEntity<Usuario> request = new HttpEntity<Usuario>(usuario);
+		HttpEntity<Usuario> requisicao = new HttpEntity<Usuario>(new Usuario(0L, 
+			"Paulo Antunes", "paulo_antunes@email.com.br", "13465278"));
 
 		ResponseEntity<Usuario> resposta = testRestTemplate
-			.exchange("/usuarios/cadastrar", HttpMethod.POST, request, Usuario.class);
-		
-		assertEquals(HttpStatus.CREATED, resposta.getStatusCode());
+			.exchange("/usuarios/cadastrar", HttpMethod.POST, requisicao, Usuario.class);
 
+		assertEquals(HttpStatus.CREATED, resposta.getStatusCode());
+		assertEquals(requisicao.getBody().getNome(), resposta.getBody().getNome());
+		assertEquals(requisicao.getBody().getUsuario(), resposta.getBody().getUsuario());
 	}
 
-	/**
-	 * Este método requer autenticação (login)
-	 */
 	@Test
 	@Order(2)
-    @DisplayName("👍 Listar todos os Usuários!")
-	public void deveMostrarTodosUsuarios() {
-		
-		ResponseEntity<String> resposta = testRestTemplate
-			.withBasicAuth("admin@email.com.br", "admin123")
-			.exchange("/usuarios/all", HttpMethod.GET, null, String.class);
-		
-		assertEquals(HttpStatus.OK, resposta.getStatusCode());
-	}
-	
-	/**
-	 * Este método requer autenticação (login)
-	 */
-	@Test
-    @Order(3)
-	@DisplayName("😳 Alterar Usuário!")
-	public void deveRealizarPutUsuario() {
+	@DisplayName("Não deve permitir duplicação do Usuário")
+	public void naoDeveDuplicarUsuario() {
 
-		HttpEntity<Usuario> request = new HttpEntity<Usuario>(usuarioUpdate);
+		usuarioService.cadastrarUsuario(new Usuario(0L, 
+			"Maria da Silva", "maria_silva@email.com.br", "13465278"));
+
+		HttpEntity<Usuario> requisicao = new HttpEntity<Usuario>(new Usuario(0L, 
+			"Maria da Silva", "maria_silva@email.com.br", "13465278"));
 
 		ResponseEntity<Usuario> resposta = testRestTemplate
-			.withBasicAuth("admin@email.com.br", "admin123")
-			.exchange("/usuarios/atualizar", HttpMethod.PUT, request, Usuario.class);
-		
-		assertEquals(HttpStatus.OK, resposta.getStatusCode());
-		
+			.exchange("/usuarios/cadastrar", HttpMethod.POST, requisicao, Usuario.class);
+
+		assertEquals(HttpStatus.BAD_REQUEST, resposta.getStatusCode());
 	}
-	
+
+	@Test
+	@Order(3)
+	@DisplayName("Alterar um Usuário")
+	public void deveAtualizarUmUsuario() {
+
+		Optional<Usuario> usuarioCreate = usuarioService.cadastrarUsuario(new Usuario(0L, 
+			"Juliana Andrews", "juliana_andrews@email.com.br", "juliana123"));
+
+		Usuario usuarioUpdate = new Usuario(usuarioCreate.get().getId(), 
+			"Juliana Andrews Ramos", "juliana_ramos@email.com.br", "juliana123");
+		
+		HttpEntity<Usuario> requisicao = new HttpEntity<Usuario>(usuarioUpdate);
+
+		ResponseEntity<Usuario> resposta = testRestTemplate
+			.withBasicAuth("root", "root")
+			.exchange("/usuarios/atualizar", HttpMethod.PUT, requisicao, Usuario.class);
+
+		assertEquals(HttpStatus.OK, resposta.getStatusCode());
+		assertEquals(usuarioUpdate.getNome(), resposta.getBody().getNome());
+		assertEquals(usuarioUpdate.getUsuario(), resposta.getBody().getUsuario());
+	}
+
+	@Test
+	@Order(4)
+	@DisplayName("Listar todos os Usuários")
+	public void deveMostrarTodosUsuarios() {
+
+		usuarioService.cadastrarUsuario(new Usuario(0L, 
+			"Sabrina Sanches", "sabrina_sanches@email.com.br", "sabrina123"));
+		
+		usuarioService.cadastrarUsuario(new Usuario(0L, 
+			"Ricardo Marques", "ricardo_marques@email.com.br", "ricardo123"));
+
+		ResponseEntity<String> resposta = testRestTemplate
+			.withBasicAuth("root", "root")
+			.exchange("/usuarios/all", HttpMethod.GET, null, String.class);
+
+		assertEquals(HttpStatus.OK, resposta.getStatusCode());
+	}
+
 }

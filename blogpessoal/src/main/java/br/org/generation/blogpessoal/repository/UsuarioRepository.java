@@ -11,16 +11,14 @@ import br.org.generation.blogpessoal.model.Usuario;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
+	/** 
+	 * Método criado para checar se o usuário já existe no banco de dados
+	 */ 
 	public Optional<Usuario> findByUsuario(String usuario);
 
 	/** 
 	 * Método criado para a Sessão de testes
 	 */ 
 	public List<Usuario> findAllByNomeContainingIgnoreCase(String nome);
-
-	/** 
-	 * Método criado para a Sessão de testes
-	 */ 
-	public Usuario findByNome(String nome);
 
 }

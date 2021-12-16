@@ -32,18 +32,16 @@ public class UsuarioController {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 	
-	@GetMapping("/all")
+	@GetMapping("/listar")
 	public ResponseEntity <List<Usuario>> getAll(){
-		
 		return ResponseEntity.ok(usuarioRepository.findAll());
-		
 	}
 	
 	@PostMapping("/logar")
-	public ResponseEntity<UsuarioLogin> loginUsuario(@RequestBody Optional <UsuarioLogin> usuarioLogin){
+	public ResponseEntity<UsuarioLogin> login(@RequestBody Optional<UsuarioLogin> usuarioLogin){
 		
 		return usuarioService.autenticarUsuario(usuarioLogin)
-			.map(resp -> ResponseEntity.status(HttpStatus.OK).body(resp))
+			.map(resposta -> ResponseEntity.status(HttpStatus.OK).body(resposta))
 			.orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
 	}
 	
@@ -56,11 +54,12 @@ public class UsuarioController {
 	}
 	
 	@PutMapping("/atualizar")
-	public ResponseEntity<Usuario> putUsuario(@Valid @RequestBody Usuario usuario){		
+	public ResponseEntity<Usuario> putUsuario(@Valid @RequestBody Usuario usuario){
+		
 		return usuarioService.atualizarUsuario(usuario)
 			.map(resposta -> ResponseEntity.status(HttpStatus.OK).body(resposta))
-			.orElse(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+			.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 	}
-
+	
+	
 }
-

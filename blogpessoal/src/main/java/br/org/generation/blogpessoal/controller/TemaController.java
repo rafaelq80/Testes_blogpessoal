@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.org.generation.blogpessoal.model.Tema;
 import br.org.generation.blogpessoal.repository.TemaRepository;
 
+
 @RestController
 @RequestMapping("/temas")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -37,8 +38,8 @@ public class TemaController {
 	@GetMapping("/{id}")
 	public ResponseEntity<Tema> getById(@PathVariable long id) {
 		return temaRepository.findById(id)
-		.map(resp -> ResponseEntity.ok(resp))
-		.orElse(ResponseEntity.notFound().build());
+			.map(resposta -> ResponseEntity.ok(resposta))
+			.orElse(ResponseEntity.notFound().build());
 	}
 
 	@GetMapping("/descricao/{descricao}")
@@ -53,19 +54,24 @@ public class TemaController {
 
 	@PutMapping
 	public ResponseEntity<Tema> putTema(@Valid @RequestBody Tema tema) {
+					
 		return temaRepository.findById(tema.getId())
-			.map(resp -> ResponseEntity.status(HttpStatus.OK).body(temaRepository.save(tema)))
-			.orElse(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+				.map(resposta -> {
+					return ResponseEntity.ok().body(temaRepository.save(tema));
+				})
+				.orElse(ResponseEntity.notFound().build());
+
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deleteTema(@PathVariable long id) {
+	public ResponseEntity<?> deletePostagem(@PathVariable long id) {
+		
 		return temaRepository.findById(id)
-			.map(resposta -> {
-				temaRepository.deleteById(id);
-				return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-			})
-			.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+				.map(resposta -> {
+					temaRepository.deleteById(id);
+					return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+				})
+				.orElse(ResponseEntity.notFound().build());
 	}
 
 }

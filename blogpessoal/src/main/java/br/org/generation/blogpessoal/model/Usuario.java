@@ -22,50 +22,40 @@ public class Usuario {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 
 	@NotNull(message = "O atributo Nome é Obrigatório!")
 	private String nome;
 
 	@NotNull(message = "O atributo Usuário é Obrigatório!")
-	@Email(message = "O atributo Usuário deve ser um email!")
+	@Email(message = "O atributo Usuário deve ser um email válido!")
 	private String usuario;
 
-	@NotBlank(message = "O atributo Senha é Obrigatória!")
+	@NotBlank(message = "O atributo Senha é Obrigatório!")
 	@Size(min = 8, message = "A Senha deve ter no mínimo 8 caracteres")
 	private String senha;
+
+	private String foto;
 	
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties("usuario")
 	private List<Postagem> postagem;
-
-	/**
-	 * Construtor com atributos da Classe Usuario
-	 * 
-	 *  *** Não adicionar o atributo postagem ***
-	 */
-	public Usuario(long id, String nome, String usuario, String senha) {
-		
+	
+	
+	public Usuario(Long id, String nome, String usuario, String senha) {
 		this.id = id;
 		this.nome = nome;
 		this.usuario = usuario;
 		this.senha = senha;
-		
 	}
-
-	/**
-	 * Construtor sem atributos da Classe Usuario
-	 * 
-	 * Será utilizado para gerar Objetos Nulos
-	 */
+	
 	public Usuario() { }
 	
-
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -91,6 +81,14 @@ public class Usuario {
 
 	public void setSenha(String senha) {
 		this.senha = senha;
+	}
+
+	public String getFoto() {
+		return foto;
+	}
+
+	public void setFoto(String foto) {
+		this.foto = foto;
 	}
 
 	public List<Postagem> getPostagem() {

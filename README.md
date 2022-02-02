@@ -88,7 +88,7 @@ Agora vamos configurar o Banco de dados de testes para não usar o Banco de dado
 
 6) Veja o arquivo criado na  **Package Explorer** 
 
-<div align="center"><img src="https://i.imgur.com/phqRE9r.png" title="source: imgur.com" /></div>
+<div align="center"><img src="https://i.imgur.com/qrJDQcr.png" title="source: imgur.com" /></div>
 
 7) Insira no arquivo application.properties as seguinte linhas:
 
@@ -112,7 +112,7 @@ Não esqueça de configurar a senha do usuário root.
 
 Na Source Folder de Testes (**src/test/java**) , observe que existe uma estrutura de pacotes semelhante a Source Folder Main (**src/main/java**). Crie na Source Folder de Testes as packages Repository e Controller como mostra a figura abaixo: 
 
-<div align="center"><img src="https://i.imgur.com/Z00I4BB.png" title="source: imgur.com" /></div>
+<div align="center"><img src="https://i.imgur.com/oExK6OD.png" title="source: imgur.com" /></div>
 
 ***A Package Model não precisa ser criada**
 
@@ -121,7 +121,7 @@ O Processo de criação dos arquivos é o mesmo do código principal, exceto o n
 <b>Exemplo: </b>
 <b>UsuarioRepository 🡪 UsuarioRepositoryTest</b>.
 
-<div align="center"><img src="https://i.imgur.com/5KerGKB.png" title="source: imgur.com" /></div>
+<div align="center"><img src="https://i.imgur.com/jWOsW9c.png" title="source: imgur.com" /></div>
 
 ***A Classe UsuarioTest não precisa ser criada**
 
@@ -171,17 +171,20 @@ public class Usuario {
 	@Size(min = 8, message = "O atributo senha deve ter no mínimo 8 caracteres")
 	private String senha;
 	
+    private String foto;
+    
 	@OneToMany (mappedBy = "usuario", cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties("usuario")
 	private List <Postagem> postagem;
 
 	// Primeiro método Construtor
 
-	public Usuario(long id, String nome, String usuario, String senha) {
+	public Usuario(Long id, String nome, String usuario, String senha, String foto) {
 		this.id = id;
 		this.nome = nome;
 		this.usuario = usuario;
 		this.senha = senha;
+		this.foto = foto;
 	}
 
 	// Segundo método Construtor
@@ -221,6 +224,14 @@ public class Usuario {
 		this.senha = senha;
 	}
 
+    public String getFoto() {
+		return foto;
+	}
+
+	public void setFoto(String foto) {
+		this.foto = foto;
+	}
+    
 	public List<Postagem> getPostagem() {
 		return this.postagem;
 	}
@@ -297,13 +308,17 @@ public class UsuarioRepositoryTest {
 	@BeforeAll
 	void start(){
 
-		usuarioRepository.save(new Usuario(0L, "João da Silva", "joao@email.com.br", "13465278"));
+		usuarioRepository.save(new Usuario(0L, "João da Silva", "joao@email.com.br", "13465278",
+                                           "https://i.imgur.com/FETvs2O.jpg"));
 		
-		usuarioRepository.save(new Usuario(0L, "Manuela da Silva", "manuela@email.com.br", "13465278"));
+		usuarioRepository.save(new Usuario(0L, "Manuela da Silva", "manuela@email.com.br", "13465278", 
+                                           "https://i.imgur.com/NtyGneo.jpg"));
 		
-		usuarioRepository.save(new Usuario(0L, "Adriana da Silva", "adriana@email.com.br", "13465278"));
+		usuarioRepository.save(new Usuario(0L, "Adriana da Silva", "adriana@email.com.br", "13465278",
+                                           "https://i.imgur.com/mB3VM2N.jpg"));
 
-        usuarioRepository.save(new Usuario(0L, "Paulo Antunes", "paulo@email.com.br", "13465278"));
+        usuarioRepository.save(new Usuario(0L, "Paulo Antunes", "paulo@email.com.br", "13465278", 
+                                           "https://i.imgur.com/JR7kUFU.jpg"));
 
 	}
 
@@ -327,6 +342,11 @@ public class UsuarioRepositoryTest {
 		
 	}
 
+    @AfterAll
+	public void end() {
+		usuarioRepository.deleteAll();
+	}
+    
 }
 ```
 
@@ -380,7 +400,7 @@ public class UsuarioControllerTest {
 	public void deveCriarUmUsuario() {
 
 		HttpEntity<Usuario> requisicao = new HttpEntity<Usuario>(new Usuario(0L, 
-			"Paulo Antunes", "paulo_antunes@email.com.br", "13465278"));
+			"Paulo Antunes", "paulo_antunes@email.com.br", "13465278", "https://i.imgur.com/JR7kUFU.jpg"));
 
 		ResponseEntity<Usuario> resposta = testRestTemplate
 			.exchange("/usuarios/cadastrar", HttpMethod.POST, requisicao, Usuario.class);
@@ -396,10 +416,10 @@ public class UsuarioControllerTest {
 	public void naoDeveDuplicarUsuario() {
 
 		usuarioService.cadastrarUsuario(new Usuario(0L, 
-			"Maria da Silva", "maria_silva@email.com.br", "13465278"));
+			"Maria da Silva", "maria_silva@email.com.br", "13465278", "https://i.imgur.com/T12NIp9.jpg"));
 
 		HttpEntity<Usuario> requisicao = new HttpEntity<Usuario>(new Usuario(0L, 
-			"Maria da Silva", "maria_silva@email.com.br", "13465278"));
+			"Maria da Silva", "maria_silva@email.com.br", "13465278", "https://i.imgur.com/T12NIp9.jpg"));
 
 		ResponseEntity<Usuario> resposta = testRestTemplate
 			.exchange("/usuarios/cadastrar", HttpMethod.POST, requisicao, Usuario.class);
@@ -413,10 +433,12 @@ public class UsuarioControllerTest {
 	public void deveAtualizarUmUsuario() {
 
 		Optional<Usuario> usuarioCreate = usuarioService.cadastrarUsuario(new Usuario(0L, 
-			"Juliana Andrews", "juliana_andrews@email.com.br", "juliana123"));
+			"Juliana Andrews", "juliana_andrews@email.com.br", 
+			"juliana123", "https://i.imgur.com/yDRVeK7.jpg"));
 
 		Usuario usuarioUpdate = new Usuario(usuarioCreate.get().getId(), 
-			"Juliana Andrews Ramos", "juliana_ramos@email.com.br", "juliana123");
+			"Juliana Andrews Ramos", "juliana_ramos@email.com.br", 
+			"juliana123", "https://i.imgur.com/yDRVeK7.jpg");
 		
 		HttpEntity<Usuario> requisicao = new HttpEntity<Usuario>(usuarioUpdate);
 
@@ -435,10 +457,12 @@ public class UsuarioControllerTest {
 	public void deveMostrarTodosUsuarios() {
 
 		usuarioService.cadastrarUsuario(new Usuario(0L, 
-			"Sabrina Sanches", "sabrina_sanches@email.com.br", "sabrina123"));
+			"Sabrina Sanches", "sabrina_sanches@email.com.br", 
+			"sabrina123", "https://i.imgur.com/5M2p5Wb.jpg"));
 		
 		usuarioService.cadastrarUsuario(new Usuario(0L, 
-			"Ricardo Marques", "ricardo_marques@email.com.br", "ricardo123"));
+			"Ricardo Marques", "ricardo_marques@email.com.br", 
+			"ricardo123", "https://i.imgur.com/Sk5SjWE.jpg"));
 
 		ResponseEntity<String> resposta = testRestTemplate
 			.withBasicAuth("root", "root")
@@ -503,6 +527,7 @@ public class BasicSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 			.antMatchers("/usuarios/logar").permitAll()
 			.antMatchers("/usuarios/cadastrar").permitAll()
+            .antMatchers(HttpMethod.OPTIONS).permitAll()
 			.anyRequest().authenticated()
 			.and().httpBasic()
 			.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
